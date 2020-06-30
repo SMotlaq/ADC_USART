@@ -342,8 +342,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	HAL_GPIO_WritePin(EN_GPIO_Port, EN_Pin, GPIO_PIN_SET);
 	value = (value*3.3)/4095;
 	sprintf(buffer,"%2.2f\r\n",value);
-	len=strlen(buffer);
-	HAL_UART_Transmit(&huart1, buffer, len, 500);
+	//len=strlen(buffer);
+	HAL_UART_Transmit(&huart1, buffer, 6, 500);
 	HAL_GPIO_WritePin(EN_GPIO_Port, EN_Pin, GPIO_PIN_RESET);
 }
 /* USER CODE END 4 */
