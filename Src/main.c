@@ -107,11 +107,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+		HAL_GPIO_WritePin(EN_GPIO_Port, EN_Pin, GPIO_PIN_SET);
 		value = (HAL_ADC_GetValue(&hadc1)*3.3)/4095;
 		sprintf(buffer,"%2.2f\r\n",value);
 		len=strlen(buffer);
 		HAL_UART_Transmit(&huart1, buffer, len, 500);
-		
+		HAL_GPIO_WritePin(EN_GPIO_Port, EN_Pin, GPIO_PIN_RESET);
 		HAL_Delay(1000);
 		
   }
