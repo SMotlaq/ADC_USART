@@ -5,7 +5,7 @@
 <h2>Tool Versions:</h2>
 IDE-Version: µVision V5.30.0.0
 Copyright (C) 2020 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: S.Motlaq ., ldm, LIC=4ZLII-TRSAP-LS4YN-Y0H1G-F78GS-U9RY5
+License Information: moji hedar, LDM.co, LIC=7YK12-9W8JU-E0XN4-F2IXQ-MK3D6-IZBQ3
  
 Tool Versions:
 Toolchain:       MDK-ARM Professional  Version: 5.30.0.0
@@ -17,24 +17,26 @@ Library Manager: ArmAr.exe V5.06 update 6 (build 750)
 Hex Converter:   FromElf.exe V5.06 update 6 (build 750)
 CPU DLL:         SARMCM3.DLL V5.30.0.0
 Dialog DLL:      DCM.DLL V1.17.3.0
-Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.7.0
+Target DLL:      Segger\JL2CM3.dll V2.99.38.0
 Dialog DLL:      TCM.DLL V1.42.0.0
  
 <h2>Project:</h2>
-D:\ac\Projects\ARM\STM32F103\ADC_USART\MDK-ARM\ADC_USART.uvprojx
+C:\Users\LDM\Desktop\Salman\ADC_USART\MDK-ARM\ADC_USART.uvprojx
 Project File Date:  07/01/2020
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'ADC_USART'
 compiling main.c...
-../Src/main.c(344): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
-  	sprintf(buffer,"%2.2f\r\n",value);
-../Src/main.c: 1 warning, 0 errors
+../Src/main.c(357): warning:  #223-D: function "abs" declared implicitly
+  	Voltage = (abs(value1-value2)*3.3)/4095;
+../Src/main.c(358): warning:  #167-D: argument of type "uint8_t *" is incompatible with parameter of type "char *restrict"
+  	sprintf(buffer,"%2.2f\r\n",Voltage);
+../Src/main.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=10872 RO-data=292 RW-data=20 ZI-data=3572  
+Program Size: Code=10924 RO-data=292 RW-data=28 ZI-data=5572  
 FromELF: creating hex file...
-"ADC_USART\ADC_USART.axf" - 0 Error(s), 1 Warning(s).
+"ADC_USART\ADC_USART.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -51,13 +53,13 @@ Package Vendor: Keil
 
 <h2>Collection of Component include folders:</h2>
   .\RTE\_ADC_USART
-  C:\Users\ASUS\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include
-  C:\Users\ASUS\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include
+  C:\Users\LDM\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include
+  C:\Users\LDM\AppData\Local\Arm\Packs\Keil\STM32F1xx_DFP\2.3.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.4.0
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

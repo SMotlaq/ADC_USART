@@ -25,6 +25,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,10 +52,12 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
-float     value       = 0;
+uint32_t  value1      = 0;
+uint32_t  value2      = 0;
 uint8_t   buffer[100]    ;
 uint8_t		len					= 0;
-uint32_t	ADC_results[NUMBER_OF_SAMPLES + NUMBER_OF_SAMPLES/10];
+uint32_t	ADC_results[ (NUMBER_OF_SAMPLES*2) + NUMBER_OF_SAMPLES/10];
+float			Voltage = 0.0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -107,7 +110,7 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Base_Start(&htim3);
-	HAL_ADC_Start_DMA(&hadc1, ADC_results, NUMBER_OF_SAMPLES);
+	HAL_ADC_Start_DMA(&hadc1, ADC_results, NUMBER_OF_SAMPLES*2);
 	
   /* USER CODE END 2 */
 
@@ -187,12 +190,12 @@ static void MX_ADC1_Init(void)
   /** Common config 
   */
   hadc1.Instance = ADC1;
-  hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T3_TRGO;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.NbrOfConversion = 2;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
   {
     Error_Handler();
@@ -202,6 +205,14 @@ static void MX_ADC1_Init(void)
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure Regular Channel 
+  */
+  sConfig.Channel = ADC_CHANNEL_1;
+  sConfig.Rank = ADC_REGULAR_RANK_2;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -334,14 +345,17 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
-	uint32_t sum = 0;
+	uint32_t sum1 = 0;
+	uint32_t sum2 = 0;
 	for(int i=0; i<NUMBER_OF_SAMPLES; i++){
-		sum += ADC_results[i];
+		sum1 += ADC_results[ 2 * i    ];
+		sum2 += ADC_results[ 2 * i + 1];
 	}
-	value = sum / NUMBER_OF_SAMPLES;
+	value1 = sum1 / NUMBER_OF_SAMPLES;
+	value2 = sum2 / NUMBER_OF_SAMPLES;
 	HAL_GPIO_WritePin(EN_GPIO_Port, EN_Pin, GPIO_PIN_SET);
-	value = (value*3.3)/4095;
-	sprintf(buffer,"%2.2f\r\n",value);
+	Voltage = (abs(value1-value2)*3.3)/4095;
+	sprintf(buffer,"%2.2f\r\n",Voltage);
 	//len=strlen(buffer);
 	HAL_UART_Transmit(&huart1, buffer, 6, 500);
 	HAL_GPIO_WritePin(EN_GPIO_Port, EN_Pin, GPIO_PIN_RESET);
