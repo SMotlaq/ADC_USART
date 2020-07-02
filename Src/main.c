@@ -23,9 +23,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,10 +51,9 @@ UART_HandleTypeDef huart1;
 /* USER CODE BEGIN PV */
 uint32_t  value1      = 0;
 uint32_t  value2      = 0;
-uint8_t   buffer[100]    ;
-uint8_t		len					= 0;
 uint32_t	ADC_results[ (NUMBER_OF_SAMPLES*2) + NUMBER_OF_SAMPLES/10];
-uint32_t	Voltage = 0.0;
+uint16_t	Voltage = 0;
+uint8_t		buffer[2];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -285,7 +281,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 9600;
+  huart1.Init.BaudRate = 19200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -354,8 +350,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	value1 = sum1 / NUMBER_OF_SAMPLES;
 	value2 = sum2 / NUMBER_OF_SAMPLES;
 	HAL_GPIO_WritePin(EN_GPIO_Port, EN_Pin, GPIO_PIN_SET);
-	Voltage = abs(value1-value2);
-	HAL_UART_Transmit(&huart1, &Voltage, 6, 500);
+	Voltage = (value1-value2)>0 ? value1-value2 : value2-value1;
+	buffer[0] = Voltage >> 8;			//Msb part
+	buffer[1] = Voltage >> 0;			//Lsb part
+	HAL_UART_Transmit(&huart1, buffer, 2, 500);
 	HAL_GPIO_WritePin(EN_GPIO_Port, EN_Pin, GPIO_PIN_RESET);
 }
 /* USER CODE END 4 */
